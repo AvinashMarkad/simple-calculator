@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Rose Calculator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      @keyframes button-press {
+        0% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(0.95);
+        }
+        100% {
+          transform: scale(1);
+        }
+      }
+      .button-press {
+        animation: button-press 0.2s ease;
+      }
+    </style>
+  </head>
+  <body class="bg-rose-100 min-h-screen flex items-center justify-center">
+    <div
+      class="bg-white p-6 rounded-2xl shadow-xl w-80 transition-all duration-300 hover:shadow-2xl"
+    >
+      <input
+        type="text"
+        id="display"
+        readonly
+        class="w-full bg-rose-950 text-white text-3xl p-4 rounded-lg mb-4 text-right focus:outline-none focus:ring-2 focus:ring-rose-500 transition-all"
+        value="0"
+        title="Calculator Display"
+        placeholder="0"
+      />
+
+      <div class="grid grid-cols-4 gap-3">
+        <!-- Operators -->
+        <button
+          onclick="clearDisplay()"
+          class="col-span-2 bg-rose-500 text-white p-4 rounded-lg hover:bg-rose-600 active:scale-95 transition-all"
+        >
+          AC
+        </button>
+        <button
+          onclick="deleteChar()"
+          class="bg-rose-500 text-white p-4 rounded-lg hover:bg-rose-600 active:scale-95 transition-all"
+        >
+          ⌫
+        </button>
+        <button
+          onclick="appendToDisplay('/')"
+          class="bg-rose-500 text-white p-4 rounded-lg hover:bg-rose-600 active:scale-95 transition-all"
+        >
+          ÷
+        </button>
+
+        <!-- Numbers -->
+        <button
+          onclick="appendToDisplay('7')"
+          class="bg-pink-500 text-white p-4 rounded-lg hover:bg-pink-600 active:scale-95 transition-all"
+        >
+          7
+        </button>
+        <button
+          onclick="appendToDisplay('8')"
+          class="bg-pink-500 text-white p-4 rounded-lg hover:bg-pink-600 active:scale-95 transition-all"
+        >
+          8
+        </button>
+        <button
+          onclick="appendToDisplay('9')"
+          class="bg-pink-500 text-white p-4 rounded-lg hover:bg-pink-600 active:scale-95 transition-all"
+        >
+          9
+        </button>
+        <button
+          onclick="appendToDisplay('*')"
+          class="bg-rose-500 text-white p-4 rounded-lg hover:bg-rose-600 active:scale-95 transition-all"
+        >
+          ×
+        </button>
+
+        <button
+          onclick="appendToDisplay('4')"
+          class="bg-pink-500 text-white p-4 rounded-lg hover:bg-pink-600 active:scale-95 transition-all"
+        >
+          4
+        </button>
+        <button
+          onclick="appendToDisplay('5')"
+          class="bg-pink-500 text-white p-4 rounded-lg hover:bg-pink-600 active:scale-95 transition-all"
+        >
+          5
+        </button>
+        <button
+          onclick="appendToDisplay('6')"
+          class="bg-pink-500 text-white p-4 rounded-lg hover:bg-pink-600 active:scale-95 transition-all"
+        >
+          6
+        </button>
+        <button
+          onclick="appendToDisplay('-')"
+          class="bg-rose-500 text-white p-4 rounded-lg hover:bg-rose-600 active:scale-95 transition-all"
+        >
+          -
+        </button>
+
+        <button
+          onclick="appendToDisplay('1')"
+          class="bg-pink-500 text-white p-4 rounded-lg hover:bg-pink-600 active:scale-95 transition-all"
+        >
+          1
+        </button>
+        <button
+          onclick="appendToDisplay('2')"
+          class="bg-pink-500 text-white p-4 rounded-lg hover:bg-pink-600 active:scale-95 transition-all"
+        >
+          2
+        </button>
+        <button
+          onclick="appendToDisplay('3')"
+          class="bg-pink-500 text-white p-4 rounded-lg hover:bg-pink-600 active:scale-95 transition-all"
+        >
+          3
+        </button>
+        <button
+          onclick="appendToDisplay('+')"
+          class="bg-rose-500 text-white p-4 rounded-lg hover:bg-rose-600 active:scale-95 transition-all"
+        >
+          +
+        </button>
+
+        <button
+          onclick="appendToDisplay('0')"
+          class="col-span-2 bg-pink-500 text-white p-4 rounded-lg hover:bg-pink-600 active:scale-95 transition-all"
+        >
+          0
+        </button>
+        <button
+          onclick="appendToDisplay('.')"
+          class="bg-pink-500 text-white p-4 rounded-lg hover:bg-pink-600 active:scale-95 transition-all"
+        >
+          .
+        </button>
+        <button
+          onclick="calculate()"
+          class="bg-rose-600 text-white p-4 rounded-lg hover:bg-rose-700 active:scale-95 transition-all"
+        >
+          =
+        </button>
+      </div>
+    </div>
+
+    <script>
+      const display = document.getElementById("display");
+
+      function appendToDisplay(value) {
+        if (display.value === "0" && value !== ".") {
+          display.value = value;
+        } else {
+          display.value += value;
+        }
+      }
+
+      function clearDisplay() {
+        display.value = "0";
+      }
+
+      function deleteChar() {
+        display.value = display.value.slice(0, -1) || "0";
+      }
+
+      function calculate() {
+        try {
+          display.value = eval(
+            display.value.replace(/×/g, "*").replace(/÷/g, "/")
+          );
+        } catch (error) {
+          display.value = "Error";
+          setTimeout(clearDisplay, 1000);
+        }
+      }
+
+      // Add button press animation to all buttons
+      document.querySelectorAll("button").forEach((button) => {
+        button.addEventListener("click", function () {
+          this.classList.add("button-press");
+          setTimeout(() => this.classList.remove("button-press"), 200);
+        });
+      });
+
+      // Keyboard support
+      document.addEventListener("keydown", (e) => {
+        if (
+          (e.key >= "0" && e.key <= "9") ||
+          e.key === "." ||
+          ["+", "-", "*", "/"].includes(e.key)
+        ) {
+          appendToDisplay(e.key);
+        } else if (e.key === "Enter") {
+          calculate();
+        } else if (e.key === "Backspace") {
+          deleteChar();
+        } else if (e.key === "Escape") {
+          clearDisplay();
+        }
+      });
+    </script>
+  </body>
+</html>
